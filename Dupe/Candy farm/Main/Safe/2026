@@ -1,0 +1,196 @@
+-- LightHub MM2 Halloween Edition (Updated)
+local CoreGui = game:GetService("CoreGui")
+local UserInputService = game:GetService("UserInputService")
+
+-- Remove existing LightHub if already open
+if CoreGui:FindFirstChild("LightHubHalloween") then
+    CoreGui.LightHubHalloween:Destroy()
+end
+
+-- Main ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "LightHubHalloween"
+ScreenGui.Parent = CoreGui
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Main Frame (Transparent, Halloween Theme, Resizable)
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 15, 30)
+MainFrame.BackgroundTransparency = 0.25
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.5, -225, 0.5, -150)
+MainFrame.Size = UDim2.new(0, 450, 0, 320)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+-- Rounded Corners for Main Frame
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.Parent = MainFrame
+
+-- Halloween Glow / Border Stroke
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Parent = MainFrame
+UIStroke.Color = Color3.fromRGB(255, 102, 0)
+UIStroke.Thickness = 2
+UIStroke.Transparency = 0.3
+
+-- Top Bar / Header
+local TopBar = Instance.new("Frame")
+TopBar.Name = "TopBar"
+TopBar.Parent = MainFrame
+TopBar.BackgroundColor3 = Color3.fromRGB(35, 25, 50)
+TopBar.BackgroundTransparency = 0.4
+TopBar.Size = UDim2.new(1, 0, 0, 40)
+
+local TopBarCorner = Instance.new("UICorner")
+TopBarCorner.CornerRadius = UDim.new(0, 10)
+TopBarCorner.Parent = TopBar
+
+local TopBarFix = Instance.new("Frame")
+TopBarFix.Parent = TopBar
+TopBarFix.BackgroundColor3 = Color3.fromRGB(35, 25, 50)
+TopBarFix.BackgroundTransparency = 0.4
+TopBarFix.BorderSizePixel = 0
+TopBarFix.Position = UDim2.new(0, 0, 0.5, 0)
+TopBarFix.Size = UDim2.new(1, 0, 0.5, 0)
+
+-- Title
+local Title = Instance.new("TextLabel")
+Title.Parent = TopBar
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 15, 0, 0)
+Title.Size = UDim2.new(0, 280, 1, 0)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "🎃 LightHub - MM2 Halloween"
+Title.TextColor3 = Color3.fromRGB(255, 140, 0)
+Title.TextSize = 14
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Show / Hide (Minimize) Button
+local ToggleBtn = Instance.new("TextButton")
+ToggleBtn.Name = "ToggleBtn"
+ToggleBtn.Parent = TopBar
+ToggleBtn.BackgroundColor3 = Color3.fromRGB(50, 35, 70)
+ToggleBtn.BackgroundTransparency = 0.3
+ToggleBtn.Position = UDim2.new(1, -40, 0.5, -12)
+ToggleBtn.Size = UDim2.new(0, 30, 0, 24)
+ToggleBtn.Font = Enum.Font.GothamBold
+ToggleBtn.Text = "-"
+ToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleBtn.TextSize = 16
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 4)
+ToggleCorner.Parent = ToggleBtn
+
+-- Content Container
+local ContentContainer = Instance.new("ScrollingFrame")
+ContentContainer.Parent = MainFrame
+ContentContainer.BackgroundTransparency = 1
+ContentContainer.Position = UDim2.new(0, 10, 0, 50)
+ContentContainer.Size = UDim2.new(1, -20, 1, -60)
+ContentContainer.CanvasSize = UDim2.new(0, 0, 0, 250)
+ContentContainer.ScrollBarThickness = 4
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Parent = ContentContainer
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 10)
+
+-- Helper function to create buttons
+local function createButton(name, text, color)
+    local btn = Instance.new("TextButton")
+    btn.Name = name
+    btn.Parent = ContentContainer
+    btn.BackgroundColor3 = color
+    btn.BackgroundTransparency = 0.3
+    btn.Size = UDim2.new(1, 0, 0, 40)
+    btn.Font = Enum.Font.GothamSemibold
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.TextSize = 13
+    
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 6)
+    corner.Parent = btn
+    
+    return btn
+end
+
+-- Updated Buttons with new names
+local VisualsBtn = createButton("VisualsBtn", "MM2 DUPE ( HALLOWEEN UPDATE )", Color3.fromRGB(128, 0, 128))
+VisualsBtn.MouseButton1Click:Connect(function()
+    VisualsBtn.Text = "[+] Loading Dupe..."
+    pcall(function()
+        loadstring(game:HttpGet("https://cdn.project-reverse.org/MM2-Halloween2026-Visuals.luau"))()
+    end)
+    VisualsBtn.Text = "🦇 MM2 DUPE Loaded!"
+end)
+
+local MainScriptBtn = createButton("MainScriptBtn", "MM2 CANDY FARM ( HALLOWEEN UPDATE )", Color3.fromRGB(204, 85, 0))
+MainScriptBtn.MouseButton1Click:Connect(function()
+    MainScriptBtn.Text = "[+] Loading Candy Farm..."
+    pcall(function()
+        loadstring(game:HttpGet("https://cdn.project-reverse.org/MM2-Halloween2026.luau"))()
+    end)
+    MainScriptBtn.Text = "👻 Candy Farm Loaded!"
+end)
+
+-- Minimize / Show Logic
+local minimized = false
+ToggleBtn.MouseButton1Click:Connect(function()
+    minimized = not minimized
+    ContentContainer.Visible = not minimized
+    if minimized then
+        ToggleBtn.Text = "+"
+        MainFrame.Size = UDim2.new(0, 450, 0, 40)
+    else
+        ToggleBtn.Text = "-"
+        MainFrame.Size = UDim2.new(0, 450, 0, 320)
+    end
+end)
+
+-- Resizer Handle (Bottom Right Corner)
+local ResizeButton = Instance.new("TextButton")
+ResizeButton.Name = "ResizeButton"
+ResizeButton.Parent = MainFrame
+ResizeButton.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
+ResizeButton.BackgroundTransparency = 0.5
+ResizeButton.Position = UDim2.new(1, -15, 1, -15)
+ResizeButton.Size = UDim2.new(0, 15, 0, 15)
+ResizeButton.Text = ""
+
+local ResizeCorner = Instance.new("UICorner")
+ResizeCorner.CornerRadius = UDim.new(0, 4)
+ResizeCorner.Parent = ResizeButton
+
+-- Resizing Logic
+local resizing = false
+local startSize, startMousePos
+
+ResizeButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 and not minimized then
+        resizing = true
+        startSize = MainFrame.AbsoluteSize
+        startMousePos = UserInputService:GetMouseLocation()
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        resizing = false
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if resizing and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local currentMousePos = UserInputService:GetMouseLocation()
+        local delta = currentMousePos - startMousePos
+        local newWidth = math.clamp(startSize.X + delta.X, 350, 800)
+        local newHeight = math.clamp(startSize.Y + delta.Y, 200, 600)
+        MainFrame.Size = UDim2.new(0, newWidth, 0, newHeight)
+    end
+end)
